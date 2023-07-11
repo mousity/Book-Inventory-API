@@ -54,6 +54,18 @@ app.post("/books", async (req, res) => {
     }
 });
 
+app.patch("/books/:id", async (req, res) => {
+    const bookId = parseInt(req.params.id, 10);
+    const { title, author, genre, quantity } = req.body;
+    try {
+        const updatedBook = {
+            ...
+        }
+    } catch (err) {
+        console.error(err);
+    }
+});
+
 app.delete("/books/:id", async (req, res) => {
     const bookId = parseInt(req.params.id, 10);
 
