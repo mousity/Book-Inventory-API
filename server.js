@@ -39,7 +39,7 @@ app.get("/books/:id", async (req, res) => {
     } catch (err) {
         console.error(err);
     }
-})
+});
 
 app.post("/books", async (req, res) => {
     const { title, author, genre, quantity } = req.body;
@@ -52,4 +52,20 @@ app.post("/books", async (req, res) => {
     } catch (err) {
         console.log(err);
     }
-})
+});
+
+app.delete("/books/:id", async (req, res) => {
+    const bookId = parseInt(req.params.id, 10);
+
+    try {
+        const deleteBook = await query("DELETE FROM book_inventory WHERE id = $1", [bookId]);
+
+        if(deleteBook.rowCount > 0) {
+            res.status(200).send({ message: "Book deleted successfully" });
+        } else {
+            res.status(404).send({ message: "Book not found" });
+        }
+    } catch (err) {
+        console.error(err);
+    }
+});
