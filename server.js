@@ -31,8 +31,8 @@ app.get("/books/:id", async (req, res) => {
     try {
         const book = await query("SELECT * FROM book_inventory WHERE id = $1", [bookId]);
 
-        if (job.rows.length > 0) {
-            res.status(200).json(job.rows[0]);
+        if (book.rows.length > 0) {
+            res.status(200).json(book.rows[0]);
         } else {
             res.status(404).send({ message: "Book not found" });
         }
