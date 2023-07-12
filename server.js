@@ -56,10 +56,20 @@ app.post("/books", async (req, res) => {
 
 app.patch("/books/:id", async (req, res) => {
     const bookId = parseInt(req.params.id, 10);
-    const { title, author, genre, quantity } = req.body;
+    const fieldNames = [ "title", "author", "genre", "quantity" ].filter((name) => req.body[name]);
+    let updatedValues = fieldNames.map(name => req.body[name]);
+    const setValuesSQL = fieldNames.map((name, i) => {
+        return `${name} = $${i + 1}`
+    }).join(", ");
+
     try {
-        const updatedBook = {
-            ...
+        const updatedBook = await query(`UPDATE book_inventory SET ${setValuesSQL} WHERE id = $${fieldNames.length+1} RETURNING *`,
+        [...updatedValues, bookId]);
+
+        if(updatedBook.rows.length > 0) {
+            res.status(200).json(updatedBook.rows[0]);
+        } else {
+            res.status(404).send({ message: "Book not found" });
         }
     } catch (err) {
         console.error(err);
